@@ -23,19 +23,6 @@ const float PI = 3.1415926535897932385;
 const float esp = 1e-8;
 const float esp3 = esp * esp * esp;
 
-// swap
-
-__host__ __device__ void swap(float &a, float &b) {
-  float tmp = a;
-  a = b;
-  b = tmp;
-}
-
-__host__ __device__ float min(float &a, float &b) { return a < b ? a : b; }
-
-__host__ __device__ float max(float &a, float &b) { return a > b ? a : b; }
-
-// Utility Functions
 __host__ __device__ inline auto degrees_to_radians(float degrees) -> float {
   return degrees * PI / 180.0;
 }
