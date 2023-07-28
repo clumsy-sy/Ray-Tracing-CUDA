@@ -10,9 +10,10 @@ struct hit_record;
 */
 class material {
 public:
-    __device__ virtual bool
-    __device__ scatter(const ray &r_in, const hit_record &rec, color &attenuation, ray &scattered, curandState &state) const = 0;
-
+  __device__ virtual bool __device__ scatter(const ray &r_in,
+                                             const hit_record &rec,
+                                             color &attenuation, ray &scattered,
+                                             curandState &state) const = 0;
 };
 
 #endif

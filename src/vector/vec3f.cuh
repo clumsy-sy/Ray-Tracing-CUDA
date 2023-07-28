@@ -2,8 +2,8 @@
 #define VEC3F_CUH
 
 #include <cmath>
-#include <iostream>
 #include <curand_kernel.h>
+#include <iostream>
 
 #include "../global.cuh"
 
@@ -13,8 +13,6 @@ public:
 
 public:
   __host__ __device__ vec3f() {}
-  // __host__ __device__ vec3f(const vec3f &) = default;
-  // __host__ __device__ vec3f(vec3f &&) = default;
 
   __host__ __device__ vec3f(float xx) {
     e[0] = xx;
@@ -114,7 +112,7 @@ __host__ __device__ inline vec3f refract(const vec3f &uv, const vec3f &n,
   auto cos_theta = min(dot(-uv, n), 1.0f);
   vec3f r_out_perp = etai_over_etat * (uv + cos_theta * n);
   vec3f r_out_parallel =
-      -std::sqrt(std::abs(1.0 - r_out_perp.length_squared())) * n;
+      -std::sqrt(std::abs(1.0f - r_out_perp.length_squared())) * n;
   return r_out_perp + r_out_parallel;
 }
 
@@ -124,7 +122,8 @@ __device__ float inline random_float(curandState &state, float min, float max) {
 
 __device__ auto random_in_unit_disk(curandState &state) -> vec3f {
   while (true) {
-    auto p = vec3f(random_float(state, -1.0f, 1.0f), random_float(state, -1.0f, 1.0f), 0);
+    auto p = vec3f(random_float(state, -1.0f, 1.0f),
+                   random_float(state, -1.0f, 1.0f), 0);
     if (p.length_squared() >= 1)
       continue;
     return p;
@@ -132,19 +131,14 @@ __device__ auto random_in_unit_disk(curandState &state) -> vec3f {
 }
 
 __device__ inline vec3f random_vec3f(curandState &state) {
-  return {curand_uniform(&state), curand_uniform(&state), curand_uniform(&state)};
+  return {curand_uniform(&state), curand_uniform(&state),
+          curand_uniform(&state)};
 }
-__device__ inline static auto random_vec3f(curandState &state, float min, float max) -> vec3f {
-  return {random_float(state, min, max), random_float(state, min, max), random_float(state, min, max)};
+__device__ inline static auto random_vec3f(curandState &state, float min,
+                                           float max) -> vec3f {
+  return {random_float(state, min, max), random_float(state, min, max),
+          random_float(state, min, max)};
 }
-//
-//__host__ inline static auto random_vec3f() -> vec3f {
-//  return {host::random_float(), host::random_float(), host::random_float()};
-//}
-
-//__host__ inline static auto random_vec3f(float min, float max) -> vec3f {
-//  return {host::random_float(min, max)(), host::random_float(min, max)(), host::random_float(min, max)()};
-//}
 
 __device__ inline auto random_in_unit_sphere(curandState &state) -> vec3f {
   while (true) {
@@ -157,7 +151,8 @@ __device__ inline auto random_in_unit_sphere(curandState &state) -> vec3f {
 __device__ inline auto random_unit_vector(curandState &state) -> vec3f {
   return unit_vector(random_in_unit_sphere(state));
 }
-__device__ inline auto random_in_hemisphere(const vec3f &normal, curandState &state) -> vec3f {
+__device__ inline auto random_in_hemisphere(const vec3f &normal,
+                                            curandState &state) -> vec3f {
   // 判断与法线的位置关系
   vec3f in_unit_sphere = random_in_unit_sphere(state);
   if (dot(in_unit_sphere, normal) > 0.0) // In the same hemisphere as the normal
