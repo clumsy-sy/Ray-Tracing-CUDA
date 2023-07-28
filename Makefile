@@ -23,7 +23,7 @@ cmALL:
 	./$(TARGET)
 
 .PHONY : perf
-perf:
+perf: $(TARGET)
 	nvprof ./$(TARGET)
 
 .PHONY : build

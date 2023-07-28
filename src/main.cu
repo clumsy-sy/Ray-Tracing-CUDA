@@ -36,7 +36,7 @@ int main(int argc, const char **argv) {
   // Renderer
   Renderer renderer(world, aspect_ratio, image_width, cam);
   renderer.set_photo_name(photoname);
-  renderer.set_samples_per_pixel(64);
+  renderer.set_samples_per_pixel(400);
   renderer.set_max_depth(5);
   renderer.render();
   return 0;

@@ -88,7 +88,7 @@ public:
     bmp.write(reinterpret_cast<char *>(&fileh), sizeof(fileh));
     bmp.write(reinterpret_cast<char *>(&infoh), sizeof(infoh));
     bmp.write(reinterpret_cast<char *>(image.data()), image.size() * 3);
-    std::cout << "--- Photo success !!! ---" << std::endl;
+    std::cout << "--- Photo Success !!! ---" << std::endl;
   }
   auto generate() { generate("default.bmp"); }
 };

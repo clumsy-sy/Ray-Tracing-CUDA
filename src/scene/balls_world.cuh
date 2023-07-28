@@ -79,7 +79,7 @@ __global__ void random_balls_world(hittable **total) {
   hittable *ball3 = new sphere(point3(4.0f, 1.0f, 0.0f), 1.0f, material3);
   world->push_back(ball3);
 
-  printf("total: sphere : %u\n", world->idx);
+  printf("total: sphere : %u\n", world->idx + box->idx);
   //    for (uint32_t i = 0; i < box->idx; i++) {
   //        printf("ball%d: %.5f %.5f %.5f\n", i, ((sphere *)
   //        box->list[i])->center[0],

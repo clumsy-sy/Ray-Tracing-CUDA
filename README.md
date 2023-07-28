@@ -21,7 +21,7 @@ make cmALL
 
 **运行**
 ```sh
-just run [图片名]
+./build/RayTracing [图片名]
 ```
 
 **性能分析**
