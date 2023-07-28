@@ -8,32 +8,34 @@ public:
     void ** begin = nullptr;
 
 public:
-    __host__ cuda_vector(){
+    __device__ cuda_vector(){
         size = 16;
         idx = 0;
         begin = nullptr;
+        cudaMalloc((void **) &begin, size * sizeof(void*));
     }
-    __host__ cuda_vector* cuda_vector_init() {
+//    __device__ cuda_vector* cuda_vector_init() {
 
-        cudaError_t err = cudaSuccess;
-        cuda_vector* res = nullptr;
-        err = cudaMalloc((void **) &res, sizeof(cuda_vector));
-        if(err != cudaSuccess) {
-            return nullptr;
-        }
-        err = cudaMemcpy(res, &*this, sizeof(cuda_vector), cudaMemcpyHostToDevice);
+//        cudaError_t err = cudaSuccess;
+//        cuda_vector* self = nullptr;
+//        err = cudaMalloc((void **) &self, sizeof(cuda_vector));
+//        if(err != cudaSuccess) {
+//            return nullptr;
+//        }
 
-        if(err != cudaSuccess) {
-            return nullptr;
-        }
+//        err = cudaMalloc((void **) &begin, size * sizeof(void*));
+//        if(err != cudaSuccess) {
+//            return nullptr;
+//        }
 
-        err = cudaMalloc((void **) &begin, size * sizeof(void*));
-        if(err != cudaSuccess) {
-            return nullptr;
-        }
+//        err = cudaMemcpy(self, &*this, sizeof(cuda_vector), cudaMemcpyHostToDevice);
 
-        return  res;
-    }
+//        if(err != cudaSuccess) {
+//            return nullptr;
+//        }
+//
+//        return  self;
+//    }
 
     __device__ bool vector_enlarge(){
         cudaError_t err = cudaSuccess;

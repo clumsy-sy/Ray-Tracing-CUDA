@@ -2,6 +2,7 @@
 #define MATERIAL_HPP
 
 #include "../geometry/ray.cuh"
+
 struct hit_record;
 
 /*
@@ -9,10 +10,9 @@ struct hit_record;
 */
 class material {
 public:
-  virtual auto scatter(const ray &r_in, const hit_record &rec, color &attenuation, ray &scattered) const -> bool = 0;
-  [[nodiscard]] virtual auto emitted(float, float, const point3 &) const -> color {
-    return {0, 0, 0};
-  }
+    __device__ virtual bool
+    __device__ scatter(const ray &r_in, const hit_record &rec, color &attenuation, ray &scattered, curandState &state) const = 0;
+
 };
 
 #endif

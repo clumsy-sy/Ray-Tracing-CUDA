@@ -2,30 +2,28 @@
 #define LAMBERTIAN_HPP
 
 #include "material.cuh"
-#include "../texture/texture.hpp"
-#include "../texture/solid_color.hpp"
-#include "../geometry/hittable.hpp"
+#include "../geometry/hittable.cuh"
 
 class lambertian : public material {
 public:
-  std::shared_ptr<texture> albedo; // 以某种概率分布衰减，albedo / p
+    color albedo; // 以某种概率分布衰减，albedo / p
 
 public:
-  lambertian(const color &a) : albedo(std::make_shared<solid_color>(a)) {}
-  lambertian(std::shared_ptr<texture> a) : albedo(std::move(a)) {}
+    __device__ lambertian(const color &a) : albedo(a) {}
 
-  auto scatter(const ray &, const hit_record &rec, color &attenuation, ray &scattered) const -> bool override {
-    // 得到一个在交点的单位相切圆上的随机散射方向向量
-    auto scatter_direction = rec.normal + random_unit_vector();
+    __device__ bool
+    __device__ scatter(const ray &, const hit_record &rec, color &attenuation, ray &scattered, curandState &state) const override {
+        // 得到一个在交点的单位相切圆上的随机散射方向向量
+        auto scatter_direction = rec.normal + random_unit_vector(state);
 
-    // Catch degenerate scatter direction
-    if (scatter_direction.near_zero())
-      scatter_direction = rec.normal;
+        // Catch degenerate scatter direction
+        if (scatter_direction.near_zero())
+            scatter_direction = rec.normal;
 
-    scattered = ray(rec.p, scatter_direction);
-    attenuation = albedo->value(rec.u, rec.v, rec.p);
-    return true;
-  }
+        scattered = ray(rec.p, scatter_direction);
+        attenuation = albedo;
+        return true;
+    }
 };
 
 #endif
