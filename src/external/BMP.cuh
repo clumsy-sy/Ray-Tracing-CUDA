@@ -40,14 +40,25 @@ struct BMP_INFO_HEADER {
 class bitmap {
 public:
   int width, height;
-  std::vector<std::array<std::uint8_t, 3>> image;
+  std::vector<std::array<uint8_t, 3>> image;
+  std::vector<std::array<float, 3>> fimage;
 
 public:
   bitmap() = default;
-  bitmap(int w, int h) : width(w), height(h) { image.resize(width * height); }
+
+  bitmap(int w, int h) : width(w), height(h) {
+    image.resize(width * height);
+    fimage.resize(width * height);
+  }
+
   auto get(int x, int y) -> std::array<std::uint8_t, 3> & {
     return image[y * width + x];
   }
+
+  auto getf(int x, int y) -> std::array<float, 3> & {
+    return fimage[y * width + x];
+  }
+
   auto set(int x, int y, const color &pixel_color) {
     image[y * width + x] = {static_cast<unsigned char>(
                                 255.999 * clamp(pixel_color.z(), 0.0, 0.999)),
@@ -56,6 +67,7 @@ public:
                             static_cast<unsigned char>(
                                 255.999 * clamp(pixel_color.x(), 0.0, 0.999))};
   }
+
   auto set(int x, int y, color pixel_color, int samples_per_pixel) {
     // Divide the color by the number of samples.
     auto scale = 1.0 / samples_per_pixel;
@@ -68,6 +80,19 @@ public:
         static_cast<unsigned char>(256 * clamp(pixel_color.y(), 0.0, 0.999)),
         static_cast<unsigned char>(256 * clamp(pixel_color.x(), 0.0, 0.999))};
   }
+
+  void floatToUint(uint32_t samples_per_pixel) {
+    auto scale = 1.0 / samples_per_pixel;
+    for (uint32_t i = 0; i < image.size(); i++) {
+      image[i][0] =
+          static_cast<uint8_t>(255.999 * std::sqrt(fimage[i][2] * scale));
+      image[i][1] =
+          static_cast<uint8_t>(255.999 * std::sqrt(fimage[i][1] * scale));
+      image[i][2] =
+          static_cast<uint8_t>(255.999 * std::sqrt(fimage[i][0] * scale));
+    }
+  }
+
   auto generate(const std::string &filename) {
     if (width % 4) {
       std::cerr << "width is not a multiple of 4" << std::endl;
@@ -90,6 +115,7 @@ public:
     bmp.write(reinterpret_cast<char *>(image.data()), image.size() * 3);
     std::cout << "--- Photo Success !!! ---" << std::endl;
   }
+
   auto generate() { generate("default.bmp"); }
 };
 

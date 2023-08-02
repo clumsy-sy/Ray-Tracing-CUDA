@@ -34,7 +34,8 @@ public:
     vec3f rd = lens_radius * random_in_unit_disk(state); // 镜头中随机一个点
     vec3f offset = u * rd.x() + v * rd.y();
 
-    return {msg[0] + offset, msg[3] + s * msg[1] + t * msg[2] - msg[0] - offset};
+    return {msg[0] + offset,
+            msg[3] + s * msg[1] + t * msg[2] - msg[0] - offset};
   }
 };
 

@@ -15,7 +15,7 @@ int main(int argc, const char **argv) {
   float aspect_ratio = 3.0 / 2.0;
   uint32_t image_width = 1200;
 
-  point3 lookfrom(13, 2, 3), lookat(0, 0, 0);
+  point3 lookfrom(13, 3, 3), lookat(0, 0, 0);
   float vfov = 20.0;
 
   size_t limit = 4096;
@@ -36,7 +36,7 @@ int main(int argc, const char **argv) {
   // Renderer
   Renderer renderer(world, aspect_ratio, image_width, cam);
   renderer.set_photo_name(photoname);
-  renderer.set_samples_per_pixel(400);
+  renderer.set_samples_per_pixel(64);
   renderer.set_max_depth(5);
   renderer.render();
   return 0;
